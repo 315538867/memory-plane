@@ -50,7 +50,47 @@
       "expectations": [],
       "strictNoCandidates": true,
       "strictNoExtraAccepted": true
+    },
+    {
+      "name": "repo-strong-snapshot-should-hold",
+      "type": "repo",
+      "repoPath": "repo-fixture",
+      "componentName": "BaseButton",
+      "historyDays": 90,
+      "maxCommits": 200,
+      "expectations": [
+        {
+          "claim": "项目默认按钮抽象应优先复用 BaseButton。",
+          "decision": "needs_confirmation"
+        }
+      ],
+      "strictNoExtraAccepted": true
+    },
+    {
+      "name": "repo-weak-base-button-should-hold",
+      "type": "repo",
+      "repoPath": "repo-fixture-weak",
+      "componentName": "BaseButton",
+      "historyDays": 90,
+      "maxCommits": 200,
+      "expectations": [
+        {
+          "claim": "项目默认按钮抽象应优先复用 BaseButton。",
+          "decision": "needs_confirmation"
+        }
+      ],
+      "strictNoExtraAccepted": true
+    },
+    {
+      "name": "repo-local-button-noise-should-ignore",
+      "type": "repo",
+      "repoPath": "repo-fixture-local-noise",
+      "componentName": "LocalButton",
+      "historyDays": 90,
+      "maxCommits": 200,
+      "expectations": [],
+      "strictNoCandidates": true,
+      "strictNoExtraAccepted": true
     }
   ]
 }
-

@@ -15,7 +15,8 @@ function promoteCandidate(candidate, matchResult) {
   if (
     candidate.scores.promotion_score >= THRESHOLDS.ACCEPT &&
     candidate.scores.evidence_strength >= THRESHOLDS.MIN_EVIDENCE_STRENGTH &&
-    candidate.scores.sensitivity_risk < THRESHOLDS.MAX_SENSITIVITY_RISK
+    candidate.scores.sensitivity_risk < THRESHOLDS.MAX_SENSITIVITY_RISK &&
+    passesTypeSpecificAcceptGate(candidate)
   ) {
     return buildDecision(candidate, "accepted", inferReasonCodes(candidate));
   }
@@ -31,6 +32,18 @@ function promoteCandidate(candidate, matchResult) {
 
 function violatesHardRules(candidate) {
   return !candidate.why_store || candidate.evidence_ids.length === 0;
+}
+
+function passesTypeSpecificAcceptGate(candidate) {
+  if (candidate.memory_type !== "project_constraint") {
+    return true;
+  }
+
+  return (
+    candidate.features.reuse_span >= 5 ||
+    candidate.features.replacement_count >= 2 ||
+    candidate.features.explicit_support >= 0.8
+  );
 }
 
 function inferReasonCodes(candidate) {
@@ -75,4 +88,3 @@ function buildDecision(candidate, decision, reasonCodes, matchedMemoryId = null)
 module.exports = {
   promoteCandidate
 };
-

@@ -37,9 +37,13 @@
 
 - 运行 `npm run eval`
 - 评估器会基于 `src/eval/evaluator-cases.json` 批量回放样例
+- 当前评估覆盖：
+  - `signals fixture` case
+  - `repo snapshot` case
+- 在纯 `snapshot` 情况下，强约定场景默认保守输出 `needs_confirmation`，避免误收
 - 当前输出：
   - 每个 case 的预测与通过/失败
-  - `accepted` 类别的 `precision / recall / f1`
+  - `accepted` 和 `needs_confirmation` 两个类别的 `precision / recall / f1`
   - 总体通过率
 
 仓库快照验证：

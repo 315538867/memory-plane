@@ -19,8 +19,8 @@ function scoreCandidate(candidate) {
       reusability * 0.2 +
       actionability * 0.2 +
       evidence_strength * 0.2 +
-      novelty * 0.1 +
-      recurrence * 0.1 -
+      novelty * 0.08 +
+      recurrence * 0.12 -
       wrong_if_false_cost * 0.15 -
       sensitivity_risk * 0.25
   );

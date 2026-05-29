@@ -196,7 +196,7 @@ function collectReferenceStats({ codeFiles, repoPath, componentName, componentFi
     referenceFiles.push(file);
     if (hasUsagePattern(content, componentName)) {
       usageFiles.push(file);
-      moduleBuckets.add(firstSegment(path.relative(repoPath, file)));
+      moduleBuckets.add(moduleBucket(path.relative(repoPath, file)));
     }
   }
 
@@ -218,8 +218,26 @@ function hasUsagePattern(content, componentName) {
   return content.includes(`<${componentName}`) || content.includes(`from '${componentName}`) || content.includes(`from "${componentName}`);
 }
 
-function firstSegment(relativePath) {
-  return relativePath.replaceAll("\\", "/").split("/")[0] || "root";
+function moduleBucket(relativePath) {
+  const normalized = relativePath.replaceAll("\\", "/");
+  const segments = normalized.split("/");
+  if (segments.length === 0) {
+    return "root";
+  }
+
+  if (segments[0] === "src" && segments[1] === "pages" && segments[2]) {
+    return `pages/${segments[2]}`;
+  }
+
+  if (segments[0] === "src" && segments[1]) {
+    return `src/${segments[1]}`;
+  }
+
+  if (segments[1]) {
+    return `${segments[0]}/${segments[1]}`;
+  }
+
+  return segments[0];
 }
 
 function inferLayer(relativePath) {
@@ -266,6 +284,9 @@ function findSupportingAssets(componentFile) {
 }
 
 function isGitRepository(repoPath) {
+  if (!fs.existsSync(path.join(repoPath, ".git"))) {
+    return false;
+  }
   try {
     childProcess.execFileSync("git", ["rev-parse", "--is-inside-work-tree"], {
       cwd: repoPath,
