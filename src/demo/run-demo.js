@@ -33,8 +33,10 @@ function printResult(result) {
 function main() {
   const fixtures = [
     "user-preference-signals.json",
+    "speculative-preference-signals.json",
     "base-button-weak-signals.json",
-    "base-button-signals.json"
+    "base-button-signals.json",
+    "local-button-noise-signals.json"
   ];
 
   for (const fixture of fixtures) {

@@ -65,6 +65,18 @@ function buildComponentConventionCandidate(group, scope, structural, behavioral)
     return null;
   }
 
+  const structuralSupport = averageStrength(structural);
+  const behavioralSupport = averageStrength(behavioral);
+  const shouldTreatAsProjectConvention =
+    /button$/i.test(componentName) &&
+    (structuralSupport >= 0.55 ||
+      behavioralSupport >= 0.6 ||
+      (behavioralPayload.newUsageCount || 0) >= 5);
+
+  if (!shouldTreatAsProjectConvention) {
+    return null;
+  }
+
   return {
     candidate_id: nextId("candidate"),
     memory_type: "project_constraint",
@@ -74,8 +86,8 @@ function buildComponentConventionCandidate(group, scope, structural, behavioral)
     evidence_ids: group.map((item) => item.evidence_id),
     features: {
       explicit_support: 0,
-      structural_support: averageStrength(structural),
-      behavioral_support: averageStrength(behavioral),
+      structural_support: structuralSupport,
+      behavioral_support: behavioralSupport,
       cross_source_count: countSourceKinds(group),
       reuse_span: behavioralPayload.newUsageCount || 0,
       replacement_count: behavioralPayload.replacementCount || 0,
@@ -109,4 +121,3 @@ function countSourceKinds(items) {
 module.exports = {
   buildCandidates
 };
-

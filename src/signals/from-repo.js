@@ -326,27 +326,63 @@ function analyzeDiffForComponent(diffText, componentName) {
 
   const lines = diffText.split("\n");
   let addedUsage = 0;
-  let removedButton = 0;
+  let replacementCount = 0;
+  let hunkAddedComponent = 0;
+  let hunkRemovedPrimitive = 0;
+
+  function flushHunk() {
+    replacementCount += Math.min(hunkAddedComponent, hunkRemovedPrimitive);
+    hunkAddedComponent = 0;
+    hunkRemovedPrimitive = 0;
+  }
+
   for (const line of lines) {
+    if (line.startsWith("diff --git") || line.startsWith("@@")) {
+      flushHunk();
+      continue;
+    }
     if (line.startsWith("+++") || line.startsWith("---")) {
       continue;
     }
-    if (line.startsWith("+")) {
-      if (line.includes(`<${componentName}`) || line.includes(componentName)) {
+    if (line.startsWith("+") && !line.startsWith("+++")) {
+      if (isComponentTemplateAdd(line, componentName)) {
+        addedUsage += 1;
+        hunkAddedComponent += 1;
+      } else if (isComponentImportAdd(line, componentName)) {
         addedUsage += 1;
       }
+      continue;
     }
-    if (line.startsWith("-")) {
-      if (line.includes("<button") || line.includes("button")) {
-        removedButton += 1;
+    if (line.startsWith("-") && !line.startsWith("---")) {
+      if (isPrimitiveTemplateRemove(line)) {
+        hunkRemovedPrimitive += 1;
       }
     }
   }
+  flushHunk();
 
   return {
     newUsageAdds: addedUsage,
-    replacementCount: Math.min(addedUsage, removedButton)
+    replacementCount
   };
+}
+
+function isComponentTemplateAdd(line, componentName) {
+  const templateRegex = new RegExp(`^\\+\\s*<\\s*${escapeRegex(componentName)}\\b`);
+  return templateRegex.test(line);
+}
+
+function isComponentImportAdd(line, componentName) {
+  const importRegex = new RegExp(`^\\+\\s*import\\b[^\\n]*\\b${escapeRegex(componentName)}\\b`);
+  return importRegex.test(line);
+}
+
+function isPrimitiveTemplateRemove(line) {
+  return /^-\s*<\s*button\b/i.test(line);
+}
+
+function escapeRegex(input) {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function safeRead(filePath) {

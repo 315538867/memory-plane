@@ -28,8 +28,10 @@
 - 运行 `npm run demo`
 - 当前会验证三类样例：
   - 用户显式偏好 -> `accepted`
+  - 推测型偏好 -> 不产出长期记忆
   - 弱 `BaseButton` 约定 -> `needs_confirmation`
   - 强 `BaseButton` 约定 -> `accepted`
+  - 局部 `LocalButton` 噪声 -> 不产出长期记忆
 
 仓库快照验证：
 

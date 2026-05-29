@@ -1,0 +1,19 @@
+[
+  {
+    "kind": "user_message",
+    "scope": {
+      "user_id": "u_demo",
+      "project": "memory-plane",
+      "repo": "memory-plane"
+    },
+    "content": {
+      "text": "我猜以后默认中文回复可能更好。"
+    },
+    "source": {
+      "origin": "chat",
+      "ref": "turn-demo-spec-1"
+    },
+    "timestamp": "2026-05-29T06:12:00Z"
+  }
+]
+

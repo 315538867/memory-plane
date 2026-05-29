@@ -14,6 +14,7 @@ const PREFERENCE_PATTERNS = [
     normalized_claim: "涉及实现或重构时，默认先审方案再动代码。"
   }
 ];
+const SPECULATION_REGEX = /可能|也许|我猜|估计|似乎/;
 
 function buildExplicitEvidence(signal) {
   if (signal.kind !== "user_message") {
@@ -21,6 +22,9 @@ function buildExplicitEvidence(signal) {
   }
 
   const text = signal.content.text || "";
+  if (SPECULATION_REGEX.test(text)) {
+    return [];
+  }
   return PREFERENCE_PATTERNS.filter((pattern) => pattern.regex.test(text)).map(
     (pattern) => ({
       evidence_id: nextId("evidence"),
@@ -148,4 +152,3 @@ function extractEvidence(signals) {
 module.exports = {
   extractEvidence
 };
-

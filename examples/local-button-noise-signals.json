@@ -1,0 +1,46 @@
+[
+  {
+    "kind": "code_snapshot",
+    "scope": {
+      "user_id": "u_demo",
+      "project": "memory-plane",
+      "repo": "memory-plane"
+    },
+    "content": {
+      "componentName": "LocalButton",
+      "path": "src/pages/home/LocalButton.vue",
+      "layer": "feature-local",
+      "exportedFrom": null,
+      "wrapsPrimitive": "button",
+      "supportingAssets": []
+    },
+    "source": {
+      "origin": "filesystem",
+      "ref": "src/pages/home/LocalButton.vue"
+    },
+    "timestamp": "2026-05-29T06:20:00Z"
+  },
+  {
+    "kind": "code_change",
+    "scope": {
+      "user_id": "u_demo",
+      "project": "memory-plane",
+      "repo": "memory-plane"
+    },
+    "content": {
+      "componentName": "LocalButton",
+      "newUsageCount": 1,
+      "replacementCount": 0,
+      "referenceCount": 1,
+      "referenceSpread": 0.2,
+      "reuseTrendScore": 0.2,
+      "convergenceTrendScore": 0
+    },
+    "source": {
+      "origin": "git",
+      "ref": "demo-local-button-noise"
+    },
+    "timestamp": "2026-05-29T06:21:00Z"
+  }
+]
+
