@@ -1,0 +1,45 @@
+{
+  "memory_schema": "memory-card/v1",
+  "memory_type": "technical_decision",
+  "title": "Graphiti + DeepSeek 结构化输出兼容约束",
+  "summary": "在当前自建记忆系统中，DeepSeek 的结构化输出必须走 OpenAI 兼容 chat.completions JSON 路径，不能依赖 responses.parse。",
+  "scope": {
+    "project": "edu-portal",
+    "level": "infra-memory"
+  },
+  "outcome": "保证 add_memory 队列能够稳定处理并最终落库到 Neo4j。",
+  "constraints": [
+    {
+      "rule": "llm_structured_output",
+      "value": "use openai-compatible chat.completions json path"
+    },
+    {
+      "rule": "forbidden_path",
+      "value": "do not use responses.parse with DeepSeek"
+    }
+  ],
+  "field_mappings": [
+    {
+      "from": "entity_name",
+      "to": "name"
+    },
+    {
+      "from": "facts",
+      "to": "edges"
+    }
+  ],
+  "source_of_truth": [
+    "confirmed-by-user",
+    "confirmed-by-runtime-log",
+    "confirmed-by-neo4j-write-success"
+  ],
+  "confidence": "high",
+  "validity": "until-changed",
+  "actionable_rule": "后续所有长期记忆写入必须先构造成 memory-card/v1，再允许投影到 Graphiti。",
+  "tags": [
+    "graphiti",
+    "deepseek",
+    "memory",
+    "neo4j"
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "memory-card.v1.json",
+  "title": "Memory Card v1",
+  "type": "object",
+  "required": [
+    "memory_schema",
+    "memory_type",
+    "title",
+    "summary",
+    "scope",
+    "outcome",
+    "source_of_truth",
+    "confidence",
+    "validity",
+    "actionable_rule"
+  ],
+  "properties": {
+    "memory_schema": {
+      "const": "memory-card/v1"
+    },
+    "memory_type": {
+      "type": "string",
+      "enum": [
+        "user_preference",
+        "project_constraint",
+        "technical_decision",
+        "recurring_failure_pattern",
+        "domain_fact"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "object",
+      "required": [
+        "project",
+        "level"
+      ],
+      "properties": {
+        "project": {
+          "type": "string",
+          "minLength": 1
+        },
+        "level": {
+          "type": "string",
+          "enum": [
+            "user",
+            "project",
+            "repo",
+            "infra-memory"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "outcome": {
+      "type": "string"
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "rule",
+          "value"
+        ],
+        "properties": {
+          "rule": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "field_mappings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "from",
+          "to"
+        ],
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "source_of_truth": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "validity": {
+      "type": "string",
+      "enum": [
+        "until-changed",
+        "time-bounded",
+        "experimental"
+      ]
+    },
+    "actionable_rule": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}
