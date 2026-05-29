@@ -1,0 +1,24 @@
+[
+  {
+    "kind": "code_snapshot",
+    "scope": {
+      "user_id": "u_demo",
+      "project": "memory-plane",
+      "repo": "memory-plane"
+    },
+    "content": {
+      "componentName": "BaseButton",
+      "path": "src/shared/ui/BaseButton.vue",
+      "layer": "shared-ui",
+      "exportedFrom": "src/shared/ui/index.ts",
+      "wrapsPrimitive": "button",
+      "supportingAssets": []
+    },
+    "source": {
+      "origin": "filesystem",
+      "ref": "src/shared/ui/BaseButton.vue"
+    },
+    "timestamp": "2026-05-29T06:00:00Z"
+  }
+]
+

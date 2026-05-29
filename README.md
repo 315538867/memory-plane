@@ -22,3 +22,17 @@
 
 - 先做长期记忆准入与晋升机制
 - 再接正式存储、recall 和其他扩展层
+
+最小闭环验证：
+
+- 运行 `npm run demo`
+- 当前会验证三类样例：
+  - 用户显式偏好 -> `accepted`
+  - 弱 `BaseButton` 约定 -> `needs_confirmation`
+  - 强 `BaseButton` 约定 -> `accepted`
+
+仓库快照验证：
+
+- 运行 `npm run demo:repo -- --repo ./examples/repo-fixture --component BaseButton`
+- 该命令会从目标仓库采集结构信号和使用信号，并走同一条 admission pipeline
+- 当前是 `snapshot` 模式，默认不读取历史替换轨迹，因此部分场景会保守输出 `needs_confirmation`

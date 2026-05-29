@@ -1,0 +1,48 @@
+[
+  {
+    "kind": "code_snapshot",
+    "scope": {
+      "user_id": "u_demo",
+      "project": "memory-plane",
+      "repo": "memory-plane"
+    },
+    "content": {
+      "componentName": "BaseButton",
+      "path": "src/shared/ui/BaseButton.vue",
+      "layer": "shared-ui",
+      "exportedFrom": "src/shared/ui/index.ts",
+      "wrapsPrimitive": "button",
+      "supportingAssets": [
+        "tokens"
+      ]
+    },
+    "source": {
+      "origin": "filesystem",
+      "ref": "src/shared/ui/BaseButton.vue"
+    },
+    "timestamp": "2026-05-29T06:00:00Z"
+  },
+  {
+    "kind": "code_change",
+    "scope": {
+      "user_id": "u_demo",
+      "project": "memory-plane",
+      "repo": "memory-plane"
+    },
+    "content": {
+      "componentName": "BaseButton",
+      "newUsageCount": 7,
+      "replacementCount": 2,
+      "referenceCount": 9,
+      "referenceSpread": 0.8,
+      "reuseTrendScore": 0.9,
+      "convergenceTrendScore": 0.8
+    },
+    "source": {
+      "origin": "git",
+      "ref": "demo-base-button-change"
+    },
+    "timestamp": "2026-05-29T06:05:00Z"
+  }
+]
+

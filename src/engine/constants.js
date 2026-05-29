@@ -1,0 +1,11 @@
+const THRESHOLDS = {
+  ACCEPT: 0.75,
+  HOLD: 0.55,
+  MIN_EVIDENCE_STRENGTH: 0.65,
+  MAX_SENSITIVITY_RISK: 0.3
+};
+
+module.exports = {
+  THRESHOLDS
+};
+

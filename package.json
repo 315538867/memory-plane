@@ -1,0 +1,10 @@
+{
+  "name": "memory-plane",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Value memory extraction prototype",
+  "scripts": {
+    "demo": "node src/demo/run-demo.js",
+    "demo:repo": "node src/demo/run-repo-demo.js"
+  }
+}
