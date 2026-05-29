@@ -56,3 +56,13 @@
   - `--max-commits <N>` 最大扫描提交数，默认 `120`
 - 当目标目录可用 git 历史时，会启用 `git-history-window` 行为证据；否则自动降级到快照模式
 - 当前 `v1` 判定偏保守，在证据不充分时会输出 `needs_confirmation`
+
+仓库批量扫描：
+
+- 运行 `npm run demo:repo-scan -- --repo /abs/path/to/repo --include button --max-components 20`
+- 常用参数：
+  - `--history-days <N>`
+  - `--max-commits <N>`
+- 输出包括：
+  - `accepted / needs_confirmation / no-candidate` 统计
+  - 每个组件的判定明细与原因码
