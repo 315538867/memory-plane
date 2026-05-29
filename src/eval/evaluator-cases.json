@@ -1,0 +1,56 @@
+{
+  "cases": [
+    {
+      "name": "explicit-user-preferences",
+      "fixture": "user-preference-signals.json",
+      "expectations": [
+        {
+          "claim": "默认使用中文回复。",
+          "decision": "accepted"
+        },
+        {
+          "claim": "涉及实现或重构时，默认先审方案再动代码。",
+          "decision": "accepted"
+        }
+      ],
+      "strictNoExtraAccepted": true
+    },
+    {
+      "name": "speculative-preference-should-not-promote",
+      "fixture": "speculative-preference-signals.json",
+      "expectations": [],
+      "strictNoCandidates": true,
+      "strictNoExtraAccepted": true
+    },
+    {
+      "name": "base-button-weak-should-hold",
+      "fixture": "base-button-weak-signals.json",
+      "expectations": [
+        {
+          "claim": "项目默认按钮抽象应优先复用 BaseButton。",
+          "decision": "needs_confirmation"
+        }
+      ],
+      "strictNoExtraAccepted": true
+    },
+    {
+      "name": "base-button-strong-should-accept",
+      "fixture": "base-button-signals.json",
+      "expectations": [
+        {
+          "claim": "项目默认按钮抽象应优先复用 BaseButton。",
+          "decision": "accepted"
+        }
+      ],
+      "strictNoExtraAccepted": true
+    },
+    {
+      "name": "local-button-noise-should-ignore",
+      "fixture": "local-button-noise-signals.json",
+      "expectations": [],
+      "strictNoCandidates": true,
+      "strictNoExtraAccepted": true
+    }
+  ]
+}
+

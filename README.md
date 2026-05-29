@@ -33,6 +33,15 @@
   - 强 `BaseButton` 约定 -> `accepted`
   - 局部 `LocalButton` 噪声 -> 不产出长期记忆
 
+离线评估：
+
+- 运行 `npm run eval`
+- 评估器会基于 `src/eval/evaluator-cases.json` 批量回放样例
+- 当前输出：
+  - 每个 case 的预测与通过/失败
+  - `accepted` 类别的 `precision / recall / f1`
+  - 总体通过率
+
 仓库快照验证：
 
 - 运行 `npm run demo:repo -- --repo ./examples/repo-fixture --component BaseButton`

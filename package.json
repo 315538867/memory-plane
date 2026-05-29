@@ -5,6 +5,7 @@
   "description": "Value memory extraction prototype",
   "scripts": {
     "demo": "node src/demo/run-demo.js",
-    "demo:repo": "node src/demo/run-repo-demo.js"
+    "demo:repo": "node src/demo/run-repo-demo.js",
+    "eval": "node src/eval/run-evaluator.js"
   }
 }
