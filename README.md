@@ -40,6 +40,7 @@
 - 当前评估覆盖：
   - `signals fixture` case
   - `repo snapshot` case
+  - `repo history replay` case（评估器会自动生成 `.generated` git fixture）
 - 在纯 `snapshot` 情况下，强约定场景默认保守输出 `needs_confirmation`，避免误收
 - 当前输出：
   - 每个 case 的预测与通过/失败

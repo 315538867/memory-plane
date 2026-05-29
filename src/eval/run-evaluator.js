@@ -2,8 +2,11 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { runPipeline } = require("../engine/pipeline");
 const { collectSnapshotSignals } = require("../signals/from-repo");
+const { prepareGeneratedFixtures } = require("./prepare-generated-fixtures");
 
 function main() {
+  prepareGeneratedFixtures();
+
   const casesPath = path.resolve(__dirname, "evaluator-cases.json");
   const { cases } = JSON.parse(fs.readFileSync(casesPath, "utf8"));
   const summary = {

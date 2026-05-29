@@ -91,6 +91,21 @@
       "expectations": [],
       "strictNoCandidates": true,
       "strictNoExtraAccepted": true
+    },
+    {
+      "name": "repo-history-base-button-should-accept",
+      "type": "repo",
+      "repoPath": ".generated/repo-fixture-history",
+      "componentName": "BaseButton",
+      "historyDays": 365,
+      "maxCommits": 300,
+      "expectations": [
+        {
+          "claim": "项目默认按钮抽象应优先复用 BaseButton。",
+          "decision": "accepted"
+        }
+      ],
+      "strictNoExtraAccepted": true
     }
   ]
 }
