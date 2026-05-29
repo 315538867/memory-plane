@@ -1,5 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const childProcess = require("node:child_process");
 
 const CODE_EXTENSIONS = new Set([".js", ".jsx", ".ts", ".tsx", ".vue", ".mjs", ".cjs"]);
 const INDEX_CANDIDATES = new Set(["index.ts", "index.js", "index.mjs", "index.cjs"]);
@@ -31,6 +32,12 @@ function collectSnapshotSignals(options) {
     componentFile,
     exportFile
   });
+  const historyStats = collectHistoryStats({
+    repoPath,
+    componentName,
+    historyDays: Number(options.historyDays || 30),
+    maxCommits: Number(options.maxCommits || 120)
+  });
 
   const structuralSignal = {
     kind: "code_snapshot",
@@ -55,21 +62,79 @@ function collectSnapshotSignals(options) {
     scope,
     content: {
       componentName,
-      newUsageCount: referenceStats.usageFiles.length,
-      replacementCount: 0,
+      newUsageCount: Math.max(referenceStats.usageFiles.length, historyStats.newUsageAdds),
+      replacementCount: historyStats.replacementCount,
       referenceCount: referenceStats.referenceFiles.length,
       referenceSpread: referenceStats.referenceSpread,
-      reuseTrendScore: referenceStats.reuseTrendScore,
-      convergenceTrendScore: 0
+      reuseTrendScore: Math.max(referenceStats.reuseTrendScore, historyStats.reuseTrendScore),
+      convergenceTrendScore: historyStats.convergenceTrendScore
     },
     source: {
-      origin: "filesystem-snapshot",
-      ref: repoPath
+      origin: historyStats.historyEnabled ? "git-history-window" : "filesystem-snapshot",
+      ref: historyStats.historyEnabled
+        ? `${repoPath} (last ${historyStats.historyDays} days)`
+        : repoPath
     },
     timestamp: new Date().toISOString()
   };
 
   return [structuralSignal, behavioralSignal];
+}
+
+function collectHistoryStats({ repoPath, componentName, historyDays, maxCommits }) {
+  const empty = {
+    historyEnabled: false,
+    historyDays,
+    newUsageAdds: 0,
+    replacementCount: 0,
+    reuseTrendScore: 0,
+    convergenceTrendScore: 0
+  };
+
+  if (!isGitRepository(repoPath)) {
+    return empty;
+  }
+
+  const commitIds = listRecentCommits(repoPath, historyDays, maxCommits);
+  if (commitIds.length === 0) {
+    return { ...empty, historyEnabled: true };
+  }
+
+  let newUsageAdds = 0;
+  let replacementCount = 0;
+  let commitsWithUsage = 0;
+  let commitsWithReplacement = 0;
+
+  for (const commitId of commitIds) {
+    const diff = readCommitDiff(repoPath, commitId);
+    const stats = analyzeDiffForComponent(diff, componentName);
+    newUsageAdds += stats.newUsageAdds;
+    replacementCount += stats.replacementCount;
+    if (stats.newUsageAdds > 0) {
+      commitsWithUsage += 1;
+    }
+    if (stats.replacementCount > 0) {
+      commitsWithReplacement += 1;
+    }
+  }
+
+  const reuseTrendScore = clamp(
+    Math.min(1, newUsageAdds / 12) * 0.7 +
+      Math.min(1, commitsWithUsage / Math.max(1, commitIds.length)) * 0.3
+  );
+  const convergenceTrendScore = clamp(
+    Math.min(1, replacementCount / 6) * 0.7 +
+      Math.min(1, commitsWithReplacement / Math.max(1, commitIds.length)) * 0.3
+  );
+
+  return {
+    historyEnabled: true,
+    historyDays,
+    newUsageAdds,
+    replacementCount,
+    reuseTrendScore,
+    convergenceTrendScore
+  };
 }
 
 function buildScope(options, repoName) {
@@ -200,6 +265,90 @@ function findSupportingAssets(componentFile) {
   return Array.from(new Set(assets));
 }
 
+function isGitRepository(repoPath) {
+  try {
+    childProcess.execFileSync("git", ["rev-parse", "--is-inside-work-tree"], {
+      cwd: repoPath,
+      stdio: ["ignore", "pipe", "ignore"]
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function listRecentCommits(repoPath, historyDays, maxCommits) {
+  try {
+    const output = childProcess.execFileSync(
+      "git",
+      [
+        "log",
+        "--pretty=format:%H",
+        `--since=${historyDays}.days`,
+        "-n",
+        String(maxCommits)
+      ],
+      {
+        cwd: repoPath,
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"]
+      }
+    );
+    return output
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+function readCommitDiff(repoPath, commitId) {
+  try {
+    return childProcess.execFileSync(
+      "git",
+      ["show", "--pretty=format:", "--unified=0", commitId],
+      {
+        cwd: repoPath,
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"]
+      }
+    );
+  } catch {
+    return "";
+  }
+}
+
+function analyzeDiffForComponent(diffText, componentName) {
+  if (!diffText) {
+    return { newUsageAdds: 0, replacementCount: 0 };
+  }
+
+  const lines = diffText.split("\n");
+  let addedUsage = 0;
+  let removedButton = 0;
+  for (const line of lines) {
+    if (line.startsWith("+++") || line.startsWith("---")) {
+      continue;
+    }
+    if (line.startsWith("+")) {
+      if (line.includes(`<${componentName}`) || line.includes(componentName)) {
+        addedUsage += 1;
+      }
+    }
+    if (line.startsWith("-")) {
+      if (line.includes("<button") || line.includes("button")) {
+        removedButton += 1;
+      }
+    }
+  }
+
+  return {
+    newUsageAdds: addedUsage,
+    replacementCount: Math.min(addedUsage, removedButton)
+  };
+}
+
 function safeRead(filePath) {
   return fs.readFileSync(filePath, "utf8");
 }
@@ -211,4 +360,3 @@ function clamp(value) {
 module.exports = {
   collectSnapshotSignals
 };
-

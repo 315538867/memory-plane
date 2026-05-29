@@ -35,4 +35,8 @@
 
 - 运行 `npm run demo:repo -- --repo ./examples/repo-fixture --component BaseButton`
 - 该命令会从目标仓库采集结构信号和使用信号，并走同一条 admission pipeline
-- 当前是 `snapshot` 模式，默认不读取历史替换轨迹，因此部分场景会保守输出 `needs_confirmation`
+- 可选参数：
+  - `--history-days <N>` 历史窗口天数，默认 `30`
+  - `--max-commits <N>` 最大扫描提交数，默认 `120`
+- 当目标目录可用 git 历史时，会启用 `git-history-window` 行为证据；否则自动降级到快照模式
+- 当前 `v1` 判定偏保守，在证据不充分时会输出 `needs_confirmation`

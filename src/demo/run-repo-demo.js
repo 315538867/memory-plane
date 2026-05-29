@@ -27,7 +27,9 @@ function main() {
     componentName: args.component || "BaseButton",
     userId: args.user || "u_local",
     project: args.project,
-    repo: args.repoName
+    repo: args.repoName,
+    historyDays: args["history-days"] || "30",
+    maxCommits: args["max-commits"] || "120"
   });
 
   const result = runPipeline(signals);
@@ -38,6 +40,8 @@ function main() {
   }
 
   console.log(`component: ${args.component || "BaseButton"}`);
+  console.log(`history window: ${args["history-days"] || "30"} days`);
+  console.log(`history enabled: ${signals[1]?.source?.origin === "git-history-window" ? "yes" : "no"}`);
   console.log(`claim: ${first.candidate.claim}`);
   console.log(`score: ${first.candidate.scores.promotion_score}`);
   console.log(`decision: ${first.decision.decision}`);
@@ -46,4 +50,3 @@ function main() {
 }
 
 main();
-
